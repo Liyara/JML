@@ -3,3 +3,4 @@ JML is a mathematics library, built to handle common useful mathematical objects
 
 ## Dependencies
 JUtil https://github.com/Liyara/JUtil
+C++11
