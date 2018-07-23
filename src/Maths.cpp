@@ -1,5 +1,6 @@
 #include "Maths.h"
 #include "trig.h"
+#include <IO/IO.h>
 
 enum {
     JML_TRIG_ODD = -1,
@@ -35,14 +36,21 @@ namespace jml {
         return (z < 0? z * -1 : z);
     }
 
+    long double derivitive(long double(*f)(long double), long double a) {
+        double a1 = a - JML_EPSILON;
+        double a2 = a +  JML_EPSILON;
+        double f1 = f(a1);
+        double f2 = f(a2);
+        return (f2 - f1) / (a2 - a1);
+    }
+
     long double _ipow(long double n, long double nn, long e, long c) {
         if (e > 0) {
-            if (c < e) {
-                nn *= n;
-                return _ipow(n, nn, e, c + 1);
-            } else {
+                while (c < e) {
+                    nn *= n;
+                    ++c;
+                }
                 return nn;
-            }
         } else if (e == 0) {
             return 1.0L;
         } else {
@@ -51,13 +59,15 @@ namespace jml {
     }
 
     long double _ln(long double z, long double nz, size_t e) {
-        uint64_t c = 2 * e + 1;
-        long double t = 2.0L * ((1.0L / c) * pow((z - 1.0L) / (z + 1.0L), c));
-        if (jml::abs(t) > JML_CUT) {
-            return _ln(z, nz + t, e + 1);
-        } else {
-            return nz;
-        }
+        long double t;
+        uint64_t c;
+        do {
+            c = 2 * e + 1;
+            t = 2.0L * ((1.0L / c) * pow((z - 1.0L) / (z + 1.0L), c));
+            nz += t;
+            ++e;
+        } while (jml::abs(t) >= JML_EPSILON);
+        return nz;
     }
 
     long double ln(long double z) {
@@ -79,6 +89,10 @@ namespace jml {
 
     long double log(long double z) {
         return log(JML_E, z);
+    }
+
+    long double root(long double n, long double r) {
+        return pow(n, 1.0L / r);
     }
 
     long double _pow(long double a, long double b) {
@@ -104,10 +118,6 @@ namespace jml {
     template <>
     long double pow<float>(long double a, float b) {
         return _pow(a, b);
-    }
-
-    long double root(long double n, long double r) {
-        return pow(n, 1.0L / r);
     }
 
     long double sqrt(long double n) {
@@ -202,11 +212,6 @@ namespace jml {
     }
 
     long double atan(long double x) {
-        /*
-            Credit to:
-            https://stackoverflow.com/users/780717/njuffa
-
-        */
 
         if (x < 0) {
             return -atan(abs(x));
@@ -341,6 +346,23 @@ namespace jml {
         return acsc(Angle::radians(a));
     }
 
+    long double sigmoid(long double a) {
+        long double ex = jml::pow(JML_E, a);
+        return ex / (ex + 1);
+    }
+
+    long double tanh(long double a) {
+        return 2 * sigmoid(2 * a) - 1;
+    }
+
+    long double sigmoid(const Angle &a) {
+        return sigmoid(Angle::radians(a));
+    }
+
+    long double tanh(const Angle &a) {
+        return tanh(Angle::radians(a));
+    }
+
     double toDegrees(double rads) {
         return rads * 180.0L / JML_PI;
     }
@@ -356,17 +378,6 @@ namespace jml {
     long double phi() {
         return JML_PHI;
     }
-    /*Vector2<double> toVector(double a) {
-        Vector2<double> result(cos(a), sin(a));
-        return result;
-    }
-    double root(double r, double n) {
-        if (n < 0) {
-            return -root(r, -n);
-        } else {
-            return pow(n, 1/r);
-        }
-    }*/
     int64_t gcf(int64_t a, int64_t b) {
         int l = a, r  = b, an = l % r;
         if (an == 0) return r;

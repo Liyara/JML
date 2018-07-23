@@ -36,7 +36,18 @@ namespace jml {
         }
     }
 
+    long double derivitive(long double(*)(long double), long double);
+
     int64_t gcf(int64_t, int64_t);
+
+    template <typename T, size_t l>
+    long double distance(const Vector<T, l> &a, const Vector<T, l> &b) {
+        long double r = 0;
+        for (size_t i = 0; i < l; ++i) {
+            r += (jml::pow(b[i] - a[i], 2));
+        }
+        return sqrt(r);
+    }
 
     template <
         typename T,

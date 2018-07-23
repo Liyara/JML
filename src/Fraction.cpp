@@ -30,7 +30,7 @@ namespace jml {
         }
         b = abs(b);
         jutil::String s(b);
-        size_t pos, l = s.size();
+        size_t pos = 0, l = s.size();
         s.find('.', &pos);
         if (pos == s.size()) {
             Fraction r(b, 1);
@@ -289,29 +289,33 @@ namespace jml {
     }
 
     Fraction::operator jutil::String() {
-        jutil::String r;
+        jutil::String r = "";
+        if (neg) {
+            r.insert('-');
+        }
         if (_denominator != 1) {
-            r = (neg? "-(" : "(");
+            r += "(";
             r += jutil::String::toString(_numerator);
             r += " / ";
             r += jutil::String::toString(_denominator);
             r += ")";
         } else {
-            r = (neg? "-" : "");
             r += jutil::String::toString(_numerator);
         }
         return r;
     }
     Fraction::operator const jutil::String() const {
-        jutil::String r;
+        jutil::String r = "";
+        if (neg) {
+            r.insert('-');
+        }
         if (_denominator != 1) {
-            r = (neg? "-(" : "(");
+            r += "(";
             r += jutil::String::toString(_numerator);
             r += " / ";
             r += jutil::String::toString(_denominator);
             r += ")";
         } else {
-            r = (neg? "-" : "");
             r += jutil::String::toString(_numerator);
         }
         return r;

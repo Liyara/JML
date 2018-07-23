@@ -46,6 +46,9 @@ namespace jml {
 
     public:
 
+        static constexpr size_t nRows = rows;
+        static constexpr size_t nCols = cols;
+
         typedef Matrix<T, rows, cols> Type;
         typedef T ValueType;
 
@@ -90,6 +93,7 @@ namespace jml {
         */
 
         Matrix(Literal m) {
+            data.reserve(rows);
             for (size_t i = 0; i < rows; ++i) {
                 if (i < m.size()) {
                     data.insert(Vector<T, cols>(*(m.begin() + i)));
@@ -154,7 +158,7 @@ namespace jml {
 
         */
 
-        size_t numRows() const {
+        constexpr size_t numRows() const {
             return rows;
         }
 
@@ -164,7 +168,7 @@ namespace jml {
 
         */
 
-        size_t numCols() const {
+        constexpr size_t numCols() const {
             return cols;
         }
 
@@ -195,7 +199,7 @@ namespace jml {
         */
 
         Iterator end() {
-            return &((*this)[rows - 1]);
+            return (&((*this)[rows - 1]) + 1);
         }
 
         /**
@@ -205,7 +209,7 @@ namespace jml {
         */
 
         ConstIterator end() const {
-            return &((*this)[rows - 1]);
+            return (&((*this)[rows - 1]) + 1);
         }
 
         /**
@@ -255,7 +259,7 @@ namespace jml {
 
         long double determinant() const {
             static_assert(rows == cols, "Attempting to calculate determinant of nonsquare matrix.");
-            if (rows == 2) {
+            JUTIL_IFCX_(rows == 2) {
                 return ((static_cast<long double>(this->get(0, 0)) * static_cast<long double>(this->get(1, 1))) - (static_cast<long double>(this->get(0, 1)) * static_cast<long double>(this->get(1, 0))));
             } else {
                 long double r = 0;
@@ -280,7 +284,7 @@ namespace jml {
 
         Matrix<long double, rows, cols> cofactor() const {
             static_assert(rows == cols, "Attempting to calculate cofactor of nonsquare matrix.");
-            if (rows == 2 && cols == 2) {
+            JUTIL_IFCX_(rows == 2 && cols == 2) {
                 Matrix<long double, rows, cols> result({
                     {static_cast<long double>(get(1, 1)), static_cast<long double>(get(1, 0) * -1.0L)},
                     {static_cast<long double>(get(0, 1) * -1.0L), static_cast<long double>(get(0, 0))}
@@ -325,7 +329,7 @@ namespace jml {
 
         Matrix<long double, rows, cols> adjugate() const {
             static_assert(rows == cols, "Attempting to calculate adjugate of nonsquare matrix.");
-            if (rows == 2 && cols == 2) {
+            JUTIL_IFCX_(rows == 2 && cols == 2) {
                 Matrix<long double, rows, cols> result({
                     {static_cast<long double>(get(1, 1)), static_cast<long double>(get(0, 1) * -1.0L)},
                     {static_cast<long double>(get(1, 0) * -1.0L), static_cast<long double>(get(0, 0))}
@@ -400,7 +404,7 @@ namespace jml {
         */
 
         template <typename U, size_t bCols>
-        auto operator*(const Matrix<U, cols, bCols> &b) const -> Matrix<MULTIPLY_T(T, U), rows, cols> {
+        auto operator*(const Matrix<U, cols, bCols> &b) const -> Matrix<MULTIPLY_T(T, U), rows, bCols> {
             Matrix<MULTIPLY_T(T, U), rows, bCols> result;
             for (size_t i = 0; i < rows; ++i) {
                 Vector<T, cols> lVec = this->getRow(i);
@@ -412,6 +416,18 @@ namespace jml {
             }
             return result;
         }
+
+        template <typename U>
+        auto operator()(const Matrix<U, rows, cols> &b) const -> Matrix<MULTIPLY_T(T, U), rows, cols> {
+            Matrix<MULTIPLY_T(T, U), rows, cols> result = (*this);
+            for (size_t i = 0; i < rows; ++i) {
+                for (size_t j = 0; j < cols; ++j) {
+                    result[i][j] *= b.getRow(i)[j];
+                }
+            }
+            return result;
+        }
+
         /**
 
         @brief Multiplication operator between matrix and vector.
@@ -486,6 +502,7 @@ namespace jml {
 
         void populateRows(const T &n) {
             data.clear();
+            data.reserve(rows);
             for (size_t i = 0; i < rows; ++i) {
                 data.insert(Vector<T, cols>(n));
             }
@@ -495,7 +512,7 @@ namespace jml {
             jutil::String r;
             for (auto &i: data) {
                 for (auto &ii: i) {
-                    r += jutil::String::toString(ii) + '\t';
+                    r += jutil::String(ii) + jutil::String('\t');
                 }
                 r += '\n';
             }
@@ -551,6 +568,12 @@ namespace jml {
     typedef Matrix<uint64_t, 3, 3> Matrix3u64;
     typedef Matrix<uint64_t, 4, 4> Matrix4u64;
 
+}
+
+#define JML_MATRIX_APPLY(m, f, ...) for (auto &__jml_ele: m) { \
+    for (auto &jml_ele: __jml_ele) {\
+        jml_ele = f(__VA_ARGS__);\
+    }\
 }
 
 #endif // JML_MATRIX_H

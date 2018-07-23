@@ -36,14 +36,12 @@ namespace jml {
 
     @param T: Base numerical type to be stored in the vector.
     @param length: Number of elements in the vector.
-    @param Enforces a minumum number of elements of 2.
 
     */
 
     template<
         typename T,
         size_t length,
-        typename = typename jutil::Enable<length >= 2>::Type,
         typename = typename jutil::Enable<jutil::IsArithmatic<T>::Value>::Type
     >
     class Vector : public jutil::StringInterface {
@@ -122,7 +120,7 @@ namespace jml {
 
         */
 
-        size_t getLength() const {
+        constexpr size_t getLength() const {
             return length;
         }
 
@@ -133,6 +131,7 @@ namespace jml {
         */
 
         Vector() {
+            rawVector.reserve(length);
             for (size_t i = 0; i < length; ++i) {
                 rawVector.insert(static_cast<T>(0));
             }
@@ -145,6 +144,7 @@ namespace jml {
         */
 
         Vector(Literal v) {
+            rawVector.reserve(length);
             for (size_t i = 0; i < length; ++i) {
                 if (i < v.size()) {
                     rawVector.insert(static_cast<T>(*(v.begin() + i)));
@@ -161,6 +161,7 @@ namespace jml {
         */
 
         Vector(T n) {
+            rawVector.reserve(length);
             for (size_t i = 0; i < length; ++i) {
                 rawVector.insert(n);
             }
@@ -169,29 +170,22 @@ namespace jml {
         /**
 
         @brief Copy constrctor.
-
         */
 
         template <
             typename U,
             size_t len,
             typename... Args,
-            typename = typename jutil::Enable<jutil::Convert<U, T>::Value>::Type,
-            typename = typename jutil::Enable<(sizeof...(Args) + len) == length>::Type
+            typename = typename jutil::Enable<jutil::Convert<U, T>::Value>::Type
         >
         Vector(const Vector<U, len> &v, const Args... args) {
-            for (size_t i = 0; i < length; ++i) {
-                rawVector.insert(static_cast<T>(0));
-            }
-            jutil::Queue<T> arr = {args...};
+            rawVector.reserve(length);
+            T arr[] = {static_cast<T>(args)...};
             for (size_t i = 0; i < length; ++i) {
                 if (i < len) {
-                    (*this)[i] = static_cast<T>(v.get(i));
+                    rawVector.insert(static_cast<T>(v.get(i)));
                 } else {
-                    size_t argOffset = i - len;
-                    if (argOffset < arr.size()) {
-                        (*this)[i] = arr[argOffset];
-                    }
+                    rawVector.insert(arr[i - len]);
                 }
             }
         }
@@ -213,7 +207,8 @@ namespace jml {
             for (auto &i: rawVector) {
                 r += pow(i, 2);
             }
-            return sqrt(r);
+            long double s = sqrt(r);
+            return s;
         }
 
         /**
@@ -433,9 +428,12 @@ namespace jml {
         jutil::String asString() const {
             jutil::String r = "[";
             for (auto &i: *this) {
-                r += jutil::String(i) + ", ";
+                //r += jutil::String(i) + ", ";
+                r += jutil::String(i);
+                r += ", ";
             }
-            r = r.substr(0, -3) + "]";
+            r = r.substr(0, -3);
+            r += "]";
             return r;
         }
     };
@@ -448,6 +446,10 @@ namespace jml {
     typedef Vector<double, 2> Vector2d;
     typedef Vector<double, 3> Vector3d;
     typedef Vector<double, 4> Vector4d;
+
+    typedef Vector<long double, 2> Vector2ld;
+    typedef Vector<long double, 3> Vector3ld;
+    typedef Vector<long double, 4> Vector4ld;
 
     typedef Vector<int, 2> Vector2i;
     typedef Vector<int, 3> Vector3i;

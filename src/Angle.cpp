@@ -23,7 +23,7 @@ namespace jml {
     }
 
     Angle &Angle::setDegrees(long double d) {
-        raw = d * JML_PI / 180.0L;
+        raw = d * JML_PI/ 180.0L;
         return *this;
     }
 

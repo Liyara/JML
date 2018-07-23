@@ -33,6 +33,10 @@ namespace jml {
 
     long double acsc(long double);
 
+    long double sigmoid(long double);
+
+    long double tanh(long double);
+
 
     long double cos(const Angle&);
 
@@ -57,6 +61,11 @@ namespace jml {
     long double csc(const Angle&);
 
     long double acsc(const Angle&);
+
+    long double sigmoid(const Angle&);
+
+    long double tanh(const Angle&);
+
 }
 
 #endif // JML_TRIG_H
