@@ -124,6 +124,19 @@ namespace jml {
         return root(n, 2);
     }
 
+    float sqrtf(float x) {
+        const long double xhalf = 0.5f*x;
+
+        union // get bits for floating value
+        {
+            float x;
+            int i;
+        } u;
+        u.x = x;
+        u.i = 0x5f3759df - (u.i >> 1);
+        return x*u.x*(1.5f - xhalf*u.x*u.x);
+    }
+
     jutil::Tuple<int64_t, long double> modf(long double z) {
         int64_t i = z;
         long double d = abs(z - i);
@@ -165,9 +178,12 @@ namespace jml {
     }
 
     long double _preptrig(long double a) {
-        a = abs(a);
+        //a = abs(a);
         while (a > (2 * JML_PI)) {
             a -= 2 * JML_PI;
+        }
+        while (a < -(2 * JML_PI)) {
+            a += 2 * JML_PI;
         }
         return a;
     }

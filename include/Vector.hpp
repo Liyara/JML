@@ -207,7 +207,7 @@ namespace jml {
             for (auto &i: rawVector) {
                 r += pow(i, 2);
             }
-            long double s = sqrt(r);
+            long double s = static_cast<long double>(sqrtf(static_cast<float>(r)));
             return s;
         }
 

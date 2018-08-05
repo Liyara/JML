@@ -38,6 +38,8 @@ namespace jml {
 
     long double sqrt(long double);
 
+    float sqrtf(float); //FAST (less precise) sqrt algorithm
+
 }
 
 #endif // JML_LOG_H
