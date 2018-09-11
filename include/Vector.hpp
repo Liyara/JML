@@ -94,7 +94,6 @@ namespace jml {
         */
 
         T get(size_t i) const {
-            //static_assert(rightSize, "Bracket parameter out of bounds.");
             return rawVector[i];
         }
 
@@ -105,12 +104,10 @@ namespace jml {
         */
 
         T &operator[](size_t i) {
-            //static_assert(i < length, "Bracket parameter out of bounds.");
             return rawVector[i];
         }
 
         const T &operator[](size_t i) const {
-            //static_assert(i < length, "Bracket parameter out of bounds.");
             return rawVector[i];
         }
 
@@ -320,7 +317,6 @@ namespace jml {
         auto operator*(const Vector<U, length> &b) const -> MULTIPLY_T(T, U) {
             MULTIPLY_T(T, U) result = static_cast<MULTIPLY_T(T, U)>(0);
             for (size_t i = 0; i < length; ++i) {
-                //jutil::out << get(i) << jutil::endl;
                 result += static_cast<MULTIPLY_T(T, U)>(get(i)) * static_cast<MULTIPLY_T(T, U)>(b.get(i));
             }
             return result;
@@ -347,6 +343,7 @@ namespace jml {
         */
 
         auto operator=(Literal v) -> Vector<T, length> {
+            rawVector.clear();
             for (size_t i = 0; i < length; ++i) {
                 if (i < v.size()) {
                     rawVector.insert(static_cast<T>(*(v.begin() + i)));
@@ -428,7 +425,6 @@ namespace jml {
         jutil::String asString() const {
             jutil::String r = "[";
             for (auto &i: *this) {
-                //r += jutil::String(i) + ", ";
                 r += jutil::String(i);
                 r += ", ";
             }

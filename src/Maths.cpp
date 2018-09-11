@@ -133,7 +133,7 @@ namespace jml {
             int i;
         } u;
         u.x = x;
-        u.i = 0x5f3759df - (u.i >> 1);
+        u.i = 0x5f300000 - (u.i >> 1);
         return x*u.x*(1.5f - xhalf*u.x*u.x);
     }
 
@@ -178,7 +178,6 @@ namespace jml {
     }
 
     long double _preptrig(long double a) {
-        //a = abs(a);
         while (a > (2 * JML_PI)) {
             a -= 2 * JML_PI;
         }
@@ -403,6 +402,11 @@ namespace jml {
             r = l;
         }
         return l;
+    }
+
+    long double fmod(long double b, long double m) {
+        long double z = b / m;
+        return (z - (int64_t)z) * m;
     }
     Angle literals::operator "" _degs(long double l) {
         long double rads = l * pi() / 180.0L;

@@ -84,6 +84,8 @@ namespace jml {
         return result;
     }
 
+    long double fmod(long double, long double);
+
     using Transformation = Matrix<long double, 4, 4>;
     using Vertex = Vector<long double, 4>;
 
