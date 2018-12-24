@@ -10,10 +10,10 @@
 #endif
 
 #include "constants.h"
-#include "Matrix.h"
-#include "Angle.h"
+#include "Ray.h"
 #include "Fraction.hpp"
 #include "trig.h"
+#include "Angle.h"
 
 namespace jml {
 
@@ -23,7 +23,7 @@ namespace jml {
         typename = typename jutil::Enable<jutil::IsArithmatic<T>::Value>::Type,
         typename = typename jutil::Enable<jutil::IsArithmatic<U>::Value>::Type
     >
-    int8_t compare(T a, U b) {
+    int8_t compare(const T &a, const U &b) {
         double d = abs(static_cast<long double>(a) - static_cast<long double>(b));
         if (d < JML_EPSILON) {
             return JML_EQUAL;
@@ -86,9 +86,6 @@ namespace jml {
 
     long double fmod(long double, long double);
 
-    using Transformation = Matrix<long double, 4, 4>;
-    using Vertex = Vector<long double, 4>;
-
     Transformation translate(const Vertex&, const Transformation& = identity<long double, 4>());
 
     Transformation scale(const Vertex&, const Transformation& = identity<long double, 4>());
@@ -107,6 +104,8 @@ namespace jml {
         Fraction operator "" _f(long double);
         Fraction operator "" _f(unsigned long long);
     }
+
+    int8_t ccw(const Vertex&, const Vertex&, const Vertex&);
 }
 
 #endif // JML_H

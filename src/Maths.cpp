@@ -492,4 +492,18 @@ namespace jml {
         return result;
     }
 
+    int8_t ccw(const Vertex &p1, const Vertex &p2, const Vertex &p3) {
+        long double r = ((p2.x() - p1.x()) * (p3.y() - p1.y())) - ((p2.y() - p1.y()) * (p3.x() - p1.x()));
+        return compare(r, 0.L);
+    }
+
+    bool epi = true;
+
+    void setEndpointIntersectionEnabled(bool e) {
+        epi = e;
+    }
+    bool endpointIntersectionEnabled() {
+        return epi;
+    }
+
 }

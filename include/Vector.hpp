@@ -20,6 +20,7 @@ Implements a Vector class designed to mimic the behaviour of mathematical Vector
 
 #include "log.h"
 #include "IO.h"
+#include "constants.h"
 
 namespace jml {
 
@@ -53,6 +54,11 @@ namespace jml {
         typedef T* Iterator;
         typedef const T* ConstIterator;
         typedef T type;
+
+        template <typename U>
+        long double angleTo(const Vector<U, length> &other) const {
+            return (*this * other) / (magnitude() * other.magnitude());
+        }
 
         /**
 
@@ -363,9 +369,7 @@ namespace jml {
         template<typename U>
         bool operator==(const Vector<U, length> &v) const {
             for (size_t i = 0; i < length; ++i) {
-                if (get(i) != v.get(i)) {
-                    return false;
-                }
+                if (abs(get(i) - v.get(i)) > JML_EPSILON) return false;
             }
             return true;
         }

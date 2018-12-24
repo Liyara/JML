@@ -1,7 +1,7 @@
 #ifndef JML_CONSTANTS_H
 #define JML_CONSTANTS_H
 
-#define JML_PI_ 0x1.882p+1L
+#define JML_PI_     0x1.882p+1L
 #define JML_EPSILON 0.000001L
 #define JML_CUT     0.0000001L
 #define JML_PI      0x1.921fb54442d18469898cc51701b8p+1L
@@ -25,6 +25,12 @@ enum {
 enum {
     JML_INTEGER_PART,
     JML_DECIMAL_PART
+};
+
+enum {
+    JML_CLOCKWISE = -1,
+    JML_COLLINEAR,
+    JML_COUNTERCLOCKWISE
 };
 
 #endif // JML_CONSTANTS_H
