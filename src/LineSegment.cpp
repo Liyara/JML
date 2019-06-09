@@ -1,5 +1,5 @@
-#include "Maths.h"
-#include <IO/IO.h>
+#include "JML/Maths.h"
+#include <JUtil/IO/IO.h>
 
 namespace jml {
     LineSegment::LineSegment(const Vertex &a, const Vertex &b) : Trace(a, b) {}

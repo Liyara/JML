@@ -1,4 +1,4 @@
-#include "Maths.h"
+#include "JML/Maths.h"
 
 namespace jml {
     Line::Line(const Vertex &a, const Vertex &b) : Trace(a, b) {}

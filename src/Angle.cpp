@@ -1,5 +1,5 @@
-#include "Maths.h"
-#include "trig.h"
+#include "JML/Maths.h"
+#include "JML/trig.h"
 
 namespace jml {
     Angle::Angle() : raw(0.0L), sm(0) {}
@@ -148,16 +148,16 @@ namespace jml {
 
     Angle::operator jutil::String() {
         if (sm == RADIANS) {
-            return jutil::String::toString(radians(*this));
+            return jutil::String(radians(*this));
         } else {
-            return jutil::String::toString(degrees(*this));
+            return jutil::String(degrees(*this));
         }
     }
     Angle::operator const jutil::String() const {
         if (sm == RADIANS) {
-            return jutil::String::toString(radians(*this));
+            return jutil::String(radians(*this));
         } else {
-            return jutil::String::toString(degrees(*this));
+            return jutil::String(degrees(*this));
         }
     }
 

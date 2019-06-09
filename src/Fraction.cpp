@@ -1,6 +1,6 @@
-#include "Fraction.hpp"
-#include "Maths.h"
-#include "misc.h"
+#include "JML/Fraction.hpp"
+#include "JML/Maths.h"
+#include "JML/misc.h"
 
 namespace jml {
 
@@ -37,7 +37,7 @@ namespace jml {
             *this = r;
         }
         while (true) {
-            s = s.substr(1, l - 1);
+            s = substr(s, 1, l - 1);
             l = s.size();
             if (s[0] == '.') {
                 break;
@@ -295,12 +295,12 @@ namespace jml {
         }
         if (_denominator != 1) {
             r += "(";
-            r += jutil::String::toString(_numerator);
+            r += jutil::String(_numerator);
             r += " / ";
-            r += jutil::String::toString(_denominator);
+            r += jutil::String(_denominator);
             r += ")";
         } else {
-            r += jutil::String::toString(_numerator);
+            r += jutil::String(_numerator);
         }
         return r;
     }
@@ -311,12 +311,12 @@ namespace jml {
         }
         if (_denominator != 1) {
             r += "(";
-            r += jutil::String::toString(_numerator);
+            r += jutil::String(_numerator);
             r += " / ";
-            r += jutil::String::toString(_denominator);
+            r += jutil::String(_denominator);
             r += ")";
         } else {
-            r += jutil::String::toString(_numerator);
+            r += jutil::String(_numerator);
         }
         return r;
     }

@@ -1,4 +1,4 @@
-#include "Maths.h"
+#include "JML/Maths.h"
 
 namespace jml {
     Ray::Ray(const Vertex &a, const Vertex &b) : Trace(a, b) {

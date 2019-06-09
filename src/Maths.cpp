@@ -1,6 +1,6 @@
-#include "Maths.h"
-#include "trig.h"
-#include <IO/IO.h>
+#include "JML/Maths.h"
+#include "JML/trig.h"
+#include <JUtil/IO/IO.h>
 
 enum {
     JML_TRIG_ODD = -1,
