@@ -1,6 +1,8 @@
 #ifndef JML_CONSTANTS_H
 #define JML_CONSTANTS_H
 
+#include <JML/dependencies.h>
+
 #define JML_EPSILON 0.000001L
 #define JML_CUT     0.0000001L
 #define JML_PI_     0x1.882p+1L
@@ -31,6 +33,11 @@ enum {
     JML_CLOCKWISE = -1,
     JML_COLLINEAR,
     JML_COUNTERCLOCKWISE
+};
+
+enum {
+    JML_TRIG_ODD = -1,
+    JML_TRIG_EVEN = 1
 };
 
 #endif // JML_CONSTANTS_H

@@ -13,9 +13,7 @@ Implements a Matrix class designed to mimic the behaviour of mathematical Matric
 
 */
 
-#include "JML/Vector.hpp"
-#include <JUtil/IO/IO.h>
-#include "JML/trig.h"
+#include <JML/Vector.hpp>
 
 ///error codes
 #define MATERR                          0x02
@@ -567,6 +565,75 @@ namespace jml {
     typedef Matrix<uint64_t, 2, 2> Matrix2u64;
     typedef Matrix<uint64_t, 3, 3> Matrix3u64;
     typedef Matrix<uint64_t, 4, 4> Matrix4u64;
+
+    using Transformation = Matrix<long double, 4, 4>;
+
+    template<typename U, size_t size>
+    inline Matrix<U, size, size> identity() {
+        Matrix<U, size, size> result;
+        for (size_t i = 0; i < size; ++i) {
+            Vector<U, size> resultVec;
+            resultVec[i] = static_cast<U>(1);
+            result[i] = resultVec;
+        }
+        return result;
+    }
+
+    inline Transformation translate(const Vertex &v, const Transformation &m) {
+        Transformation t = {
+            {1, 0, 0, v[0]},
+            {0, 1, 0, v[1]},
+            {0, 0, 1, v[2]},
+            {0, 0, 0, 1},
+        };
+
+        return m * t;
+    }
+
+    inline Transformation scale(const Vertex &v, const Transformation &m) {
+        Transformation t = m;
+        t[0][0] *= v[0];
+        t[1][1] *= v[1];
+        t[2][2] *= v[2];
+        return t;
+    }
+
+    inline Transformation rotate(const Angle &a, const Vector<int8_t, 3> &axes, const Transformation &m) {
+        long double k[] = {Angle::radians(a) * axes[0], Angle::radians(a) * axes[1], Angle::radians(a) * axes[2]};
+        Transformation x = {
+            {1, 0, 0, 0},
+            {0, cos(k[0]), -sin(k[0]), 0},
+            {0, sin(k[0]), cos(k[0]), 0},
+            {0, 0, 0, 1}
+        };
+
+        Transformation y = {
+            {cos(k[1]), 0, sin(k[1]), 0},
+            {0, 1, 0, 0},
+            {-sin(k[1]), 0, cos(k[1]), 0},
+            {0, 0, 0, 1}
+        };
+
+        Transformation z = {
+            {cos(k[2]), -sin(k[2]), 0, 0},
+            {sin(k[2]), cos(k[2]), 0, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 1}
+        };
+
+        return m * (z * y * x);
+    }
+
+    inline Transformation ortho(long double l, long double r, long double b, long double t, long double n, long double f) {
+        Transformation result = identity<long double, 4>();
+        result[0][0] = 2.0L / (r - l);
+        result[1][1] = 2.0L / (t - b);
+        result[2][2] = -(2.0L / (f - n));
+        result[3][0] = -((r + l) / (r - l));
+        result[3][1] = -((t + b) / (t - b));
+        result[3][2] = -((f + n) / (f - n));
+        return result;
+    }
 
 }
 

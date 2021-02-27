@@ -13,14 +13,7 @@ Implements a Vector class designed to mimic the behaviour of mathematical Vector
 
 */
 
-#include <JUtil/Container/Queue.hpp>
-#include <JUtil/Traits/Traits.hpp>
-#include <JUtil/Core/String.h>
-#include <initializer_list>
-
-#include "JML/log.h"
-#include "JUtil/IO/IO.h"
-#include "JML/constants.h"
+#include <JML/functions.h>
 
 namespace jml {
 
@@ -490,6 +483,22 @@ namespace jml {
     typedef Vector<uint64_t, 2> Vector2u64;
     typedef Vector<uint64_t, 3> Vector3u64;
     typedef Vector<uint64_t, 4> Vector4u64;
+
+    using Vertex = Vector<long double, 4>;
+
+    template <typename T, size_t l>
+    inline long double distance(const Vector<T, l> &a, const Vector<T, l> &b) {
+        long double r = 0;
+        for (size_t i = 0; i < l; ++i) {
+            r += (jml::pow(b[i] - a[i], 2));
+        }
+        return sqrt(r);
+    }
+
+    inline int8_t ccw(const Vertex &p1, const Vertex &p2, const Vertex &p3) {
+        long double r = ((p2.x() - p1.x()) * (p3.y() - p1.y())) - ((p2.y() - p1.y()) * (p3.x() - p1.x()));
+        return compare(r, 0.L);
+    }
 }
 
 #endif // VECTOR_H_INCLUDED

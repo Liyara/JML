@@ -1,15 +1,11 @@
 #ifndef JML_TRACE_H
 #define JML_TRACE_H
 
-#include "JML/types.h"
-#include <JUtil/IO/IO.h>
+#include <JML/Vector.hpp>
 
 #define JML_UNDEFINED_SLOPE 0xffae
 
 namespace jml {
-
-    void setEndpointIntersectionEnabled(bool);
-    bool endpointIntersectionEnabled();
 
     template <typename D>
     class Trace {
@@ -39,6 +35,26 @@ namespace jml {
 
         Vertex vA, vB;
     };
+
+    struct _EPIHANDLER {
+        _EPIHANDLER() : epi(true) {}
+        bool getEPI() {return epi;}
+        void setEPI(bool e) {epi = e;}
+    private:
+        bool epi;
+    };
+
+    inline _EPIHANDLER &getEPIHandler() {
+        static _EPIHANDLER epi;
+        return epi;
+    }
+
+    inline void setEndpointIntersectionEnabled(bool e) {
+        getEPIHandler().setEPI(e);
+    }
+    inline bool endpointIntersectionEnabled() {
+        return getEPIHandler().getEPI();
+    }
 }
 
 #endif // JML_TRACE_H
